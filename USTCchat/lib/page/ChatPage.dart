@@ -74,8 +74,10 @@ class _ChatPageState extends State<ChatPage> {
               const SizedBox(width: 12, height: 0),
               IconButton(
                 onPressed: () {
-                  widget._sendMsg(_msgController.text, "");
-                  _msgController.clear();
+                  if(_msgController.text!="") {
+                    widget._sendMsg(_msgController.text, "");
+                    _msgController.clear();
+                  }
                 },
                 icon: const Icon(Icons.send),
                 iconSize: 32,
