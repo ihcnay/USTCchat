@@ -10,6 +10,10 @@ class MessageComponent extends StatelessWidget {
   MessageComponent(this._msg);
 
   Widget showMessage(){
+    if(_msg.meme.isNotEmpty){
+      return Image.asset(_msg.meme,width: 100,height: 100);
+    }
+    
     return Text(_msg.msg);
   }
 

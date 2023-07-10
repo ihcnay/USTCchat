@@ -15,6 +15,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late TextEditingController _msgController;
+  bool memeShown = false;
 
   @override
   void initState() {
@@ -26,6 +27,30 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     super.dispose();
     _msgController.dispose();
+  }
+
+  Widget getMemeComponent(){
+    return Container(
+      height: 200,
+      child: SingleChildScrollView(
+        child: Wrap(
+          spacing: 16,
+          runSpacing: 4,
+          children: <Widget>[
+            createMemeIcon("image/TestImage.jpg")
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget createMemeIcon(String imageRes){
+    return GestureDetector(
+      onTap: (){
+        widget._sendMsg("",imageRes);
+      },
+      child: Image.asset(imageRes,width: 100,height: 100),
+    );
   }
 
   Widget getInputPanel() {
@@ -55,7 +80,8 @@ class _ChatPageState extends State<ChatPage> {
                 icon: const Icon(Icons.send),
                 iconSize: 32,
                 color: Colors.grey.shade600,
-              )
+              ),
+              if(memeShown)getMemeComponent()
             ],
           )
         ],
