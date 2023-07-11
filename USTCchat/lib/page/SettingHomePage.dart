@@ -96,7 +96,7 @@ class _SettingHomePageState extends State<SettingHomePage> {
     return Column(
       children: <Widget>[
         const Text(
-          "Socket Server 模式运行",
+          "Socket Client 模式运行",
           style: TextStyle(fontSize: 26),
         ),
         Row(

@@ -1,24 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:ustcchat/net/Socket.dart';
 import 'package:ustcchat/page/ChatPage.dart';
+import 'package:ustcchat/page/LoginPage.dart';
 import 'package:ustcchat/page/SettingHomePage.dart';
 
 import 'module/Message.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const StartApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class StartApp extends StatelessWidget {
+  const StartApp({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false, // 不显示右上角的 debug
+        title: 'USTCchat',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        // 注册路由表
+        routes: {
+          "/Init":(context) => const InitApp()            //初始化路由
+        },
+        home:const LoginPage(title: "登录"),
+        );
   }
 }
 
-class _MyAppState extends State<MyApp> {
+//完成账号输入后初始化
+class InitApp extends StatefulWidget {
+  const InitApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _InitAppState();
+  }
+}
+
+class _InitAppState extends State<InitApp> {
   late BaseSocketCS _socketCS;
 
   final List<Message> _messages = [];
@@ -67,8 +89,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Socket IM",
-      home: SettingHomePage(
-          createServer, createClient, goToChatPage),
+      home: SettingHomePage(createServer, createClient, goToChatPage),
     );
   }
 }
