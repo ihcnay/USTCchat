@@ -46,8 +46,6 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 60),
             buildLoginButton(context), // 登录按钮
             const SizedBox(height: 40),
-            buildOtherLoginText(), // 其他账号登录
-            buildOtherMethod(context), // 其他登录方式
             buildRegisterText(context), // 注册
           ],
         ),
@@ -60,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const Text('没有账号?'),
             GestureDetector(
@@ -75,38 +73,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildOtherMethod(context) {
-    return ButtonBar(
-      alignment: MainAxisAlignment.center,
-      children: _loginMethod
-          .map((item) => Builder(builder: (context) {
-        return IconButton(
-            icon: Icon(item['icon'],
-                color: Theme.of(context).iconTheme.color),
-            onPressed: () {
-              //第三方登录方法
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text('${item['title']}登录'),
-                    action: SnackBarAction(
-                      label: '取消',
-                      onPressed: () {},
-                    )),
-              );
-            });
-      }))
-          .toList(),
-    );
-  }
-
-  Widget buildOtherLoginText() {
-    return const Center(
-      child: Text(
-        '其他账号登录',
-        style: TextStyle(color: Colors.grey, fontSize: 14),
-      ),
-    );
-  }
 
   Widget buildLoginButton(BuildContext context) {
     return Align(
@@ -127,7 +93,17 @@ class _LoginPageState extends State<LoginPage> {
             //   //执行登录方法
             //   print('email: $_email, password: $_password');
             // }
-            Navigator.pushNamed(context, "/Init");
+            if(_email.isEmpty||_password.isEmpty){
+              if(_email.isEmpty){
+
+              }
+              if(_password.isEmpty){
+
+              }
+            }
+            else {
+              Navigator.pushNamed(context, "/Init");
+            }
           },
         ),
       ),
@@ -138,14 +114,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget buildPasswordTextField(BuildContext context) {
     return TextFormField(
         obscureText: _isObscure, // 是否显示文字（密码隐藏功能）
-        onSaved: (v) => _password = v!,
+        onChanged: (v) => _password = v,
         validator: (v) {
           if (v!.isEmpty) {
             return '请输入密码';
           }
         },
         decoration: InputDecoration(
-            labelText: "Password",
+            labelText: "密码",
             suffixIcon: IconButton(
               icon: Icon(
                 Icons.remove_red_eye,
@@ -165,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget buildEmailTextField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: 'Email Address'),
+      decoration: const InputDecoration(labelText: '账号'),
       // validator: (v) {
       //   var emailReg = RegExp(       //表单校验
       //       r"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");
@@ -173,7 +149,12 @@ class _LoginPageState extends State<LoginPage> {
       //     return '请输入正确的邮箱地址';
       //   }
       // },
-      onSaved: (v) => _email = v!,
+      onChanged: (v) => _email = v,
+      validator: (v) {
+        if (v!.isEmpty) {
+          return '请输入账号';
+        }
+      },
     );
   }
 
@@ -181,8 +162,8 @@ class _LoginPageState extends State<LoginPage> {
     return const Padding(
         padding: EdgeInsets.all(8),
         child: Text(
-          'USTCchat Login',
-          style: TextStyle(fontSize: 42),
+          'USTCchat',
+          style: TextStyle(fontSize: 40),
         ));
   }
 }
