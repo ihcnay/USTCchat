@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../module/User.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -10,23 +12,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey _formKey = GlobalKey<FormState>();
-  late String _email, _password;
+  late String _username, _password;
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
-  final List _loginMethod = [
-    {
-      "title": "facebook",
-      "icon": Icons.facebook,
-    },
-    {
-      "title": "google",
-      "icon": Icons.fiber_dvr,
-    },
-    {
-      "title": "twitter",
-      "icon": Icons.account_balance,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
             const SizedBox(height: kToolbarHeight), // 距离顶部一个工具栏的高度
-            buildTitle(), // Login
+            buildTitle("USTCchat"), // Login
             const SizedBox(height: 60),
             buildEmailTextField(), // 输入邮箱
             const SizedBox(height: 30),
@@ -87,14 +75,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Text('Login',
               style: Theme.of(context).primaryTextTheme.headlineSmall),
           onPressed: () {
-            // 表单校验通过才会继续执行
-            // if ((_formKey.currentState as FormState).validate()) {
-            //   (_formKey.currentState as FormState).save();
-            //   //执行登录方法
-            //   print('email: $_email, password: $_password');
-            // }
-            if(_email.isEmpty||_password.isEmpty){
-              if(_email.isEmpty){
+            if(_username.isEmpty||_password.isEmpty){
+              //todo:各种异常的反应
+              if(_username.isEmpty){
 
               }
               if(_password.isEmpty){
@@ -102,7 +85,16 @@ class _LoginPageState extends State<LoginPage> {
               }
             }
             else {
-              Navigator.pushNamed(context, "/Init");
+              int i = isMatch(_username,_password) as int;
+              if(i == -2){          //todo:弹窗账号不存在
+
+              }
+              else if(i == -1){       //todo:弹窗密码错误
+
+              }
+              else if(i == 0){       //正确登陆
+                Navigator.pushNamed(context, "/Init");
+              }
             }
           },
         ),
@@ -149,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
       //     return '请输入正确的邮箱地址';
       //   }
       // },
-      onChanged: (v) => _email = v,
+      onChanged: (v) => _username = v,
       validator: (v) {
         if (v!.isEmpty) {
           return '请输入账号';
@@ -158,12 +150,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildTitle() {
-    return const Padding(
-        padding: EdgeInsets.all(8),
+  Widget buildTitle(String title) {
+    return Padding(
+        padding: const EdgeInsets.all(8),
         child: Text(
-          'USTCchat',
-          style: TextStyle(fontSize: 40),
+          title,
+          style: const TextStyle(fontSize: 40),
         ));
   }
 }

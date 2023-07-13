@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ustcchat/module/User.dart';
 import 'package:ustcchat/net/Socket.dart';
 import 'package:ustcchat/page/ChatPage.dart';
 import 'package:ustcchat/page/LoginPage.dart';
@@ -7,6 +8,7 @@ import 'package:ustcchat/page/SettingHomePage.dart';
 import 'module/Message.dart';
 
 void main() {
+  Init_data_base();
   runApp(const StartApp());
 }
 
