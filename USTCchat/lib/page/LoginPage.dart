@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../module/User.dart';
 
@@ -7,12 +8,13 @@ class LoginPage extends StatefulWidget {
   final String title;
 
   @override
-    _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey _formKey = GlobalKey<FormState>();
-  late String _username, _password;
+  String _username = '';
+  String _password = '';
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
 
@@ -52,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
             GestureDetector(
               child: const Text('点击注册', style: TextStyle(color: Colors.green)),
               onTap: () {
-                print("点击注册");
+                Navigator.pushNamed(context, "/Register");
               },
             )
           ],
@@ -61,47 +63,70 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget buildLoginButton(BuildContext context) {
+
     return Align(
       child: SizedBox(
         height: 45,
         width: 270,
         child: ElevatedButton(
-          style: ButtonStyle(
-            // 设置圆角
-              shape: MaterialStateProperty.all(const StadiumBorder(
-                  side: BorderSide(style: BorderStyle.none)))),
-          child: Text('Login',
-              style: Theme.of(context).primaryTextTheme.headlineSmall),
-          onPressed: () {
-            if(_username.isEmpty||_password.isEmpty){
-              //todo:各种异常的反应
-              if(_username.isEmpty){
-
+            style: ButtonStyle(
+                // 设置圆角
+                shape: MaterialStateProperty.all(const StadiumBorder(
+                    side: BorderSide(style: BorderStyle.none)))),
+            child: Text('Login',
+                style: Theme.of(context).primaryTextTheme.headlineSmall),
+            onPressed: () async {
+              Fluttertoast.cancel();
+              if (_username.isEmpty || _password.isEmpty) {
+                if (_username.isEmpty) {
+                  Fluttertoast.showToast(
+                      msg: "用户名不能为空",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black45,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "密码不能为空",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black45,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              } else {
+                int i = await isMatch(_username, _password);
+                if (i == -2) {
+                  Fluttertoast.showToast(
+                      msg: "用户不存在",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black45,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                } else if (i == -1) {
+                  Fluttertoast.showToast(
+                      msg: "密码错误",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black45,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                } else if (i == 0) {
+                  //正确登陆
+                  Navigator.pushNamed(context, "/Init");
+                }
               }
-              if(_password.isEmpty){
-
-              }
-            }
-            else {
-              int i = isMatch(_username,_password) as int;
-              if(i == -2){          //todo:弹窗账号不存在
-
-              }
-              else if(i == -1){       //todo:弹窗密码错误
-
-              }
-              else if(i == 0){       //正确登陆
-                Navigator.pushNamed(context, "/Init");
-              }
-            }
-          },
-        ),
+            }),
       ),
     );
   }
-
 
   Widget buildPasswordTextField(BuildContext context) {
     return TextFormField(
@@ -134,13 +159,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget buildEmailTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: '账号'),
-      // validator: (v) {
-      //   var emailReg = RegExp(       //表单校验
-      //       r"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");
-      //   if (!emailReg.hasMatch(v!)) {
-      //     return '请输入正确的邮箱地址';
-      //   }
-      // },
       onChanged: (v) => _username = v,
       validator: (v) {
         if (v!.isEmpty) {
